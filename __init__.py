@@ -89,6 +89,21 @@ def index():
     # creating a map in the view
     return render_template('index.html')
 
+@app.route("/createroute")
+def createroute():
+    # creating a map in the view
+    return render_template('map.html')
+
+@app.route("/editroute")
+def editroute():
+    # creating a map in the view
+    return render_template('map2.html')
+
+@app.route("/showroute")
+def showroute():
+    # creating a map in the view
+    return render_template('map3.html')
+
 if __name__ == "__main__":
     app.secret_key = '1098247ijdhasf0982134jkb9812351'
     app.run(debug=True)
