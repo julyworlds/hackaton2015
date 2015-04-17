@@ -18,7 +18,7 @@ def register(username,password,mail):
 
 def login(username,password):
     conexion = checkConnect();cur = conexion.cursor()
-    cur.execute("SELECT  * from Usuarios Where Usuario=?",(username))
+    cur.execute("SELECT  * from Usuarios Where Usuario=?",(username,))
     res = cur.fetchone()
     if res == None:
         return False
@@ -31,7 +31,7 @@ def getSitios(tipo=None, punto=None, distancia=None):
     sql = "SELECT * from Sitios "
     if tipo != None:
         sql += "Where Tipo=? "
-        cur.execute(sql,(tipo))
+        cur.execute(sql,(tipo,))
     else:
         cur.execute(sql)
     res = cur.fetchall()
@@ -65,7 +65,7 @@ def getSevici(punto=None, distancia=None):
 def getRutaById(Id):
     conexion = checkConnect();cur = conexion.cursor()
     sql = "SELECT Rutas.ID,Rutas.Ruta,ValoracionRutas.Comentarios,ValoracionRutas.Tiempo,ValoracionRutas.Valoracion,Usuarios.Usuario from Rutas JOIN ValoracionRutas ON Rutas.ID=ValoracionRutas.IDRuta JOIN Usuarios ON ValoracionRutas.IDUsuario=Usuarios.ID Where Rutas.ID=?"
-    cur.execute(sql,(Id))
+    cur.execute(sql,(Id,))
     res = cur.fetchall()
     cur.close();conexion.close()
     toRet = (res[0][0],res[0][1],[(x[2],x[3],x[4],x[5]) for x in res])
@@ -84,7 +84,7 @@ def getRutasRadio(puntoInicio, puntoFin, distancia):
         last = getSitioById(sitios[-1].split(":")[0])
         if utilidades.menorDistancia((first[3],first[4]),puntoInicio,distancia) and utilidades.menorDistancia((last[3],last[4]),puntoFin,distancia):
             res.append(Id)
-    return [getRutaById(x) for x in res]g
+    return [getRutaById(x) for x in res]
 
 
 
