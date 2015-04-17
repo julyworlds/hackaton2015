@@ -12,7 +12,7 @@ def register(username,password,mail):
     if res == None:
         return False
     cur.execute("INSERT INTO Usuarios (Usuario,Password,Correo) VALUES (?,?,?)", (username,password,mail))
-    self.conexion.commit()
+    conexion.commit()
     cur.close();conexion.close()
     return True
 
@@ -40,6 +40,14 @@ def getSitios(tipo=None, punto=None, distancia=None):
         return utilidades.getPuntosCercanos(punto,distancia,res)
     else:
         return res
+
+def getTiposSitio():
+    conexion = checkConnect();cur = conexion.cursor()
+    sql = "SELECT DISTINCT Tipo from Sitios "
+    cur.execute(sql)
+    res = cur.fetchall()
+    cur.close();conexion.close()
+    return res    
 
 def getSitioById(Id):
     conexion = checkConnect();cur = conexion.cursor()
