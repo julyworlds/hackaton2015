@@ -1,0 +1,47 @@
+{% extends "navbar.html" %}
+<!--Container principal-->
+{% block content %}    <div class="container">
+    <div id="info-inicio" class=""> </div>
+
+    <div class="row">
+
+      <div id="map-outer" class="col-md-12">
+
+          <form action="" method=post class="form-horizontal">
+    <h2>Registro de nuevo usuario </h2>
+    <div class="control-group">
+        <div class="controls">
+          <input type="text" id="username" name="username" class="input-xlarge"
+            placeholder="Enter Username" value="enter user"
+            required>
+        </div>
+    </div>
+ 
+    <div class="control-group">
+        <div class="controls">
+          <input type="password" id="password" name="password" class="input-xlarge"
+            placeholder="Enter Password" value="enter pass"
+            required>
+        </div>
+    </div>
+ 
+    <div class="control-group">
+        <div class="controls">
+          <input type="email" id="email" name="email" class="input-xlarge"
+            placeholder="Enter Email" value="Enter email"
+            required>
+        </div>
+    </div>
+ 
+    <div class="control-group">
+        <div class="controls">
+          <button type="submit" class="btn btn-success">Signup</button>
+        </div>
+    </div>
+  </form>
+      </div><!-- /map-outer -->
+  </div> <!-- /row -->
+ 
+
+</div><!-- /container -->    
+{% endblock %}
