@@ -37,7 +37,7 @@ def getSitios(tipo=None, punto=None, distancia=None):
     res = cur.fetchall()
     cur.close();conexion.close()
     if punto != None and distancia != None:
-        return utilidades.getPuntosCercanos(punto,distancia,res)
+        return [ x[1] for x in utilidades.getPuntosCercanos(punto,distancia,res)]
     else:
         return res
 
@@ -64,8 +64,9 @@ def getSevici(punto=None, distancia=None):
     cur.execute(sql)
     res = cur.fetchall()
     cur.close();conexion.close()
+    res2 = [(x[0],"Sevici",x[1],x[2],x[3]) for x in res]
     if punto != None and distancia != None:
-        return utilidades.getPuntosCercanos(punto,distancia,res)
+        return utilidades.getPuntoMasCercano(punto,distancia,res2)
     else:
         return res
 
