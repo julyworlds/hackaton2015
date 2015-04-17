@@ -47,11 +47,11 @@ def getTiposSitio():
     cur.execute(sql)
     res = cur.fetchall()
     cur.close();conexion.close()
-    return res    
+    return [x[0] for x in res]    
 
 def getSitioById(Id):
     conexion = checkConnect();cur = conexion.cursor()
-    sql = "SELECsqlite3.connect('h4g.sqlite')T * from Sitios Where ID=?"
+    sql = "SELECT * from Sitios Where ID=?"
     cur.execute(sql,(Id))
     res = cur.fetchone()
     cur.close();conexion.close()
@@ -71,6 +71,14 @@ def getSevici(punto=None, distancia=None):
         return res
 
 #Rutas
+def createRuta(Ruta, IDusuario):
+    conexion = checkConnect();cur = conexion.cursor()
+    cur.execute("INSERT INTO Rutas (Ruta,IDUsuario) VALUES (?,?)", (Ruta,IDusuario))
+    conexion.commit()
+    res = cur.lastrowid
+    cur.close();conexion.close()
+    return res
+
 def getRutaById(Id):
     conexion = checkConnect();cur = conexion.cursor()
     sql = "SELECT Rutas.ID,Rutas.Ruta,ValoracionRutas.Comentarios,ValoracionRutas.Tiempo,ValoracionRutas.Valoracion,Usuarios.Usuario from Rutas JOIN ValoracionRutas ON Rutas.ID=ValoracionRutas.IDRuta JOIN Usuarios ON ValoracionRutas.IDUsuario=Usuarios.ID Where Rutas.ID=?"
@@ -89,11 +97,25 @@ def getRutasRadio(puntoInicio, puntoFin, distancia):
     res = []
     for (Id,Ruta,IDUsuario) in res:
         sitios = Ruta.split(",")
-        first = getSitioById(sitios[0].split(":")[0])
-        last = getSitioById(sitios[-1].split(":")[0])
-        if utilidades.menorDistancia((first[3],first[4]),puntoInicio,distancia) and utilidades.menorDistancia((last[3],last[4]),puntoFin,distancia):
-            res.append(Id)
+        (firstId,lastId) = utilidades.getFirstLastSitio(sitios)
+        if firstId != None and lastId != None:
+            first = getSitioById(firstId)
+            last = getSitioById(lastId)
+            if utilidades.menorDistancia((first[3],first[4]),puntoInicio,distancia) and utilidades.menorDistancia((last[3],last[4]),puntoFin,distancia):
+                res.append(Id)
     return [getRutaById(x) for x in res]
 
+#ValoracionRutas
+def createValoracionRutas(comentarios, tiempo, valoracion, idUsuario, idRuta):
+    conexion = checkConnect();cur = conexion.cursor()
+    cur.execute("INSERT INTO ValoracionRutas (Comentarios, Tiempo, Valoracion, IDUsuario, IDRuta) VALUES (?,?,?,?,?)", (comentarios,tiempo,valoracion,idUsuario,idRuta))
+    conexion.commit()
+    cur.close();conexion.close()
 
-
+def existeValoracionRuta(idRuta, idUsuario):
+    conexion = checkConnect();cur = conexion.cursor()
+    cur.execute("SELECT * FROM ValoracionRutas Where IDRuta=? and IDUsuario=?", (idRuta,idUsuario))
+    row = cur.fetchone()
+    cur.close();conexion.close()
+    return row != None
+    

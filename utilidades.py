@@ -36,7 +36,20 @@ def getPuntoMasCercano(Punto, distancia, ListaSitios):
 	else:
 		return (None,None)
 
+def getFirstLastSitio(listaRuta):
+	first = None
+	last = None
+	for ele in listaRuta:
+		splits = ele.split(":")
+		Id = splits[0]
+		tipo = Id = splits[1]
+		if tipo != "Sevici":
+			if first == None:
+				first = Id
+			last = Id
+	return (first,last)
 
-Lista= [[1,"Biblioteca","Biblioteca1", 37.357924, -5.986320], [2,"Museo","Museo1",37.362922, -5.975878]]
-PuntoA = (37.355508, -5.987698)
-print(getPuntosCercanos(PuntoA,50,Lista))
+
+# Lista= [[1,"Biblioteca","Biblioteca1", 37.357924, -5.986320], [2,"Museo","Museo1",37.362922, -5.975878]]
+# PuntoA = (37.355508, -5.987698)
+# print(getPuntosCercanos(PuntoA,500,Lista))
