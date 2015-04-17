@@ -14,6 +14,7 @@ unicode = str
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
+
 @app.route("/prueba")
 def prueba():
     listaPuntos = [(37.355508, -5.987698),(37.855508, -5.287698)]
@@ -106,6 +107,10 @@ def index():
     # creating a map in the view
     return render_template('index.html')
 
+@app.route("/mapa")
+def showMap():
+    return render_template("map.html",tipos=bd.getTiposSitio())
+
 @app.route("/iniciarRuta",methods=['POST'])
 def iniciarRuta():
     listaPuntos = request.form['puntos']
@@ -120,8 +125,7 @@ def iniciarRuta():
                     sitios.append(sitio)
     rutas = bd.getRutasRadio(listaPuntos[0],listaPuntos[-1],distancia)
     #TODO mostrar los sitios
-    #return jsonify(sitios=sitios,rutas=rutas)
-
+    return render_template("map2.html", puntos=sitios, tipos=listaTipos})
 
 @app.route("/calculaRutaSevici", methods=['POST'])
 def calculaRutaSevici():
@@ -132,8 +136,8 @@ def calculaRutaSevici():
     if sevici1 != sevici2 and sevici1 != None and sevici2 != None:
         distP = utilidades.getDistancia(puntoInicio,puntoFin)
         if distP > dist1 + utilidades.getDistancia((sevici1[2],sevici1[3]),(sevici2[2],sevici2[3])) + dist2:
-            return flask.jsonify(puntoInicio=sevici1,puntoFin=sevici2)
-    return flask.jsonify(puntoInicio=None,puntoFin=None)
+            return jsonify(puntoInicio=sevici1,puntoFin=sevici2)
+    return jsonify(puntoInicio=None,puntoFin=None)
 
 @app.route("/crearRuta", methods=['POST'])
 def crearRuta():
@@ -145,7 +149,13 @@ def crearRuta():
     idruta = bd.createRuta(ruta, current_user.id)
     #going to show details
     detallesRuta = bd.getRutaById(idruta)
-    
+
+@app.route("/detallesRuta", methods=['GET'])    
+def detallesRuta():
+    idRuta = request.form['idRuta']
+    detallesRuta = bd.getRutaById(idruta)
+
+
 
 if __name__ == "__main__":
     app.secret_key = '1098247ijdhasf0982134jkb9812351'
