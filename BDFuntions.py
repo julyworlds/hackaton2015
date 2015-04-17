@@ -2,38 +2,32 @@ import sqlite3
 import utilidades
 
 def checkConnect():
-    if self.conexion == None:
-        createConnect()
-    return self.conexion.cursor()
-
-def createConnect():
-    self.conexion = sqlite3.connect('h4g.sqlite')
+    return sqlite3.connect('h4g.sqlite')
 
 #Usuarios
 def register(username,password,mail):
-    cur = checkConnect()
-
+    conexion = checkConnect();cur = conexion.cursor()
     cur.execute("SELECT * from Usuarios Where Usuario=? or Correo=?",(username,mail))
     res = cur.fetchone()
     if res == None:
         return False
     cur.execute("INSERT INTO Usuarios (Usuario,Password,Correo) VALUES (?,?,?)", (username,password,mail))
     self.conexion.commit()
-    cur.close()
+    cur.close();conexion.close()
     return True
 
 def login(username,password):
-    cur = checkConnect()
+    conexion = checkConnect();cur = conexion.cursor()
     cur.execute("SELECT  * from Usuarios Where Usuario=?",(username))
     res = cur.fetchone()
     if res == None:
         return False
-    cur.close()
+    cur.close();conexion.close()
     return res[2] == password
 
 #Sitios
 def getSitios(tipo=None, punto=None, distancia=None):
-    cur = checkConnect()
+    conexion = checkConnect();cur = conexion.cursor()
     sql = "SELECT * from Sitios "
     if tipo != None:
         sql += "Where Tipo=? "
@@ -41,27 +35,27 @@ def getSitios(tipo=None, punto=None, distancia=None):
     else:
         cur.execute(sql)
     res = cur.fetchall()
-    cur.close()
+    cur.close();conexion.close()
     if punto != None and distancia != None:
         return utilidades.getPuntosCercanos(punto,distancia,res)
     else:
         return res
 
 def getSitioById(Id):
-    cur = checkConnect()
-    sql = "SELECT * from Sitios Where ID=?"
+    conexion = checkConnect();cur = conexion.cursor()
+    sql = "SELECsqlite3.connect('h4g.sqlite')T * from Sitios Where ID=?"
     cur.execute(sql,(Id))
     res = cur.fetchone()
-    cur.close()
+    cur.close();conexion.close()
     return res	
 
 #Sevici
 def getSevici(punto=None, distancia=None):
-    cur = checkConnect()
+    conexion = checkConnect();cur = conexion.cursor()
     sql = "SELECT * from Sevici "
     cur.execute(sql)
     res = cur.fetchall()
-    cur.close()
+    cur.close();conexion.close()
     if punto != None and distancia != None:
         return utilidades.getPuntosCercanos(punto,distancia,res)
     else:
@@ -69,20 +63,20 @@ def getSevici(punto=None, distancia=None):
 
 #Rutas
 def getRutaById(Id):
-    cur = checkConnect()
+    conexion = checkConnect();cur = conexion.cursor()
     sql = "SELECT Rutas.ID,Rutas.Ruta,ValoracionRutas.Comentarios,ValoracionRutas.Tiempo,ValoracionRutas.Valoracion,Usuarios.Usuario from Rutas JOIN ValoracionRutas ON Rutas.ID=ValoracionRutas.IDRuta JOIN Usuarios ON ValoracionRutas.IDUsuario=Usuarios.ID Where Rutas.ID=?"
     cur.execute(sql,(Id))
     res = cur.fetchall()
-    cur.close()
+    cur.close();conexion.close()
     toRet = (res[0][0],res[0][1],[(x[2],x[3],x[4],x[5]) for x in res])
     return res
 
 def getRutasRadio(puntoInicio, puntoFin, distancia):
-    cur = checkConnect()
+    conexion = checkConnect();cur = conexion.cursor()
     sql = "SELECT * from Rutas"
     cur.execute(sql)
     res = cur.fetchall()
-    cur.close()
+    cur.close();conexion.close()
     res = []
     for (Id,Ruta,IDUsuario) in res:
         sitios = Ruta.split(",")
