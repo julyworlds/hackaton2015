@@ -72,16 +72,21 @@
             <div class="panel-heading"> Mapa </div>
             <div class="panel-body"> 
                 <div id="map-container" ></div>
-                <form action="/iniciarRuta" method="post">
+                <form id="target" action="/iniciarRuta" method="post">
                     <input type="hidden" id="puntos" name="puntos" value="" />
                     <input type="hidden" id="tipos" name="tipos" value="" />
-                    <input type="submit" id="btn" name="crear" value="Crear" / >
+                    <input type="button" id="btn" name="crear" value="Crear" / >
                 </form>  
 
                     <script>
                         $(document).ready(function(){
                             $('#btn').click(function(){
                                 $('#puntos').val(JSON.stringify(puntos));
+                                if(puntos.length > 1) {
+                                    $('#target').submit();
+                                } else {
+                                    alert('Tienes que seleccionar al menos dos puntos');
+                                }
                             });
                         });
                     </script>
