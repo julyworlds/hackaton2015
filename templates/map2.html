@@ -56,13 +56,15 @@
                 });
                 google.maps.event.addListener(marker, 'click', function() {
                     // Se prepara el array con ambos puntos
-                    formData = [punto_actual,[toCoords(marker.position), marker.tipo, marker.id] ];
+                    formData = { puntoInicio : punto_actual,
+                                 puntoFin : [toCoords(marker.position), marker.tipo, marker.id]};
+
                     punto_actual = [toCoords(marker.position), marker.type, marker.id];
-                    console.log(JSON.stringify(formData));
+                    console.log(formData);
                     $.ajax({
                         url : "calculaRutaSevici",
                         type: "POST",
-                        data : JSON.stringify(formData),
+                        data : formData,
                         dataType : "json",
                         success: function(data, textStatus, jqXHR)
                         {
