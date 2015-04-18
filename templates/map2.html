@@ -15,12 +15,14 @@
         {% for punto in puntosInicio %}
         puntosInicio.push([ {{ punto[0] }}, {{ punto[1] }}])
         {% endfor %} 
-
+        
+        
         var punto_actual = [puntosInicio[0], '', 0];
         var formData = [];
         var rutaFinal = [];
 
         var markers = []
+        var rutaFinal = []
 
         // Crea el mapa
         var map;
@@ -38,6 +40,31 @@
         
         // Dibuja los puntos de interes
         function drawPlaces() {
+            var markerInicio = new google.maps.Marker({
+                    position: new google.maps.LatLng(puntosInicio[0][0], puntosInicio[0][1]),
+                    icon: {
+                        path: google.maps.SymbolPath.CIRCLE,
+                        scale: 4, //tamaño
+                        strokeColor: 'green', //color del borde
+                        strokeWeight: 1, //grosor del borde
+                        fillColor: 'red', //color de relleno
+                        fillOpacity:1// opacidad del relleno
+                    },
+                    map : map
+            });
+            var markerFin = new google.maps.Marker({
+                    position: new google.maps.LatLng(puntosInicio[(puntosInicio.length)-1][0], puntosInicio[(puntosInicio.length)-1][1]),
+                    icon: {
+                        path: google.maps.SymbolPath.CIRCLE,
+                        scale: 4, //tamaño
+                        strokeColor: 'green', //color del borde
+                        strokeWeight: 1, //grosor del borde
+                        fillColor: 'red', //color de relleno
+                        fillOpacity:1// opacidad del relleno
+                    },
+                    map : map
+            });
+
             for(var a=0;a<puntos.length;a++) {
                 var marker = new google.maps.Marker({
                     position: new google.maps.LatLng(puntos[a][3], puntos[a][4]),
@@ -54,32 +81,38 @@
                     title: puntos[a][2],
                     tipo: puntos[a][1] 
                 });
-                google.maps.event.addListener(marker, 'click', function() {
-                    // Se prepara el array con ambos puntos
-                    formData = { puntoInicio : JSON.stringify(punto_actual),
-                                 puntoFin : JSON.stringify([toCoords(marker.position), marker.tipo, marker.id])};
-
-                    punto_actual = [toCoords(marker.position), marker.type, marker.id];
-                    console.log(formData);
-                    $.ajax({
-                        url : "calculaRutaSevici",
-                        type: "POST",
-                        data : formData,
-                        dataType : "json",
-                        success: function(data, textStatus, jqXHR)
-                        {
-                            //data - response from server
-                            trataDatos(data);
-                        },
-                        error: function (jqXHR, textStatus, errorThrown)
-                        {
-
-                        }
-                    });
-         
-                });
                 markers.push(marker);
             }
+        for(var a=0;a<markers.length;a++) {
+            console.log(markers[0]);
+            google.maps.event.addListener(markers[a], 'click', function(a) {
+                console.log('Se ha hecho click en: ' + markers[a].position);
+                // Se prepara el array con ambos puntos
+                formData = { puntoInicio : JSON.stringify(punto_actual),
+                    puntoFin : JSON.stringify([toCoords(markers[a].position),
+                            markers[a].tipo,
+                            markers[a].id])};
+
+                punto_actual = [toCoords(markers[a].position), markers[a].tipo, markers[a].id];
+                console.log(formData);
+                $.ajax({
+                    url : "calculaRutaSevici",
+                    type: "POST",
+                    data : formData,
+                    dataType : "json",
+                    success: function(data, textStatus, jqXHR)
+                    {
+                        //data - response from server
+                        trataDatos(data);
+                    },
+                    error: function (jqXHR, textStatus, errorThrown)
+                    {
+
+                    }
+                });
+
+            });
+        }
             return markers;
 
         }
@@ -97,6 +130,15 @@
         // Tratar la respuesta AJAX
         function trataDatos(data) {
             console.log(data);
+            console.log("Ruta final");
+            if (data.puntoInicio != null) {
+                rutaFinal.push(data.puntoInicio);
+                rutaFinal.push(data.puntoFin);
+            }
+            rutaFinal.push(punto_actual);
+
+            console.log(rutaFinal);
+            
         };
 
         // Estaciones sevici

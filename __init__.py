@@ -145,7 +145,7 @@ def calculaRutaSevici():
     if sevici1 != sevici2 and sevici1 != None and sevici2 != None:
         print(sevici1,sevici2)
         distP = utilidades.getDistancia(puntoInicio,puntoFin)
-        if distP*1.2 > dist1 + utilidades.getDistancia((sevici1[3],sevici1[4]),(sevici2[3],sevici2[4])) + dist2:
+        if distP*1.6 > dist1 + utilidades.getDistancia((sevici1[3],sevici1[4]),(sevici2[3],sevici2[4])) + dist2:
             return jsonify(puntoInicio=((sevici1[3],sevici1[4]),sevici1[1],sevici1[0]),puntoFin=((sevici2[3],sevici2[4]),sevici2[1],sevici1[0]))
     return jsonify(puntoInicio=None,puntoFin=None)
 
