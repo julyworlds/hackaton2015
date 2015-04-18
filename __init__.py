@@ -3,6 +3,7 @@ from flask.ext.login import LoginManager, login_user , logout_user , current_use
 from flask.ext.sqlalchemy import SQLAlchemy
 from uuid import uuid4
 import BDFuntions as bd
+import json
 
 # Inicia la aplicacion
 #500m
@@ -114,19 +115,20 @@ def showMap():
 @app.route("/iniciarRuta",methods=['POST'])
 def iniciarRuta():
     listaPuntos = json.loads(request.form['puntos'])
-    print("asdasdasdas",listaPuntos)
-    listaTipos = json.loads(request.form['tipos'])
+    #listaTipos = json.dumps(request.form['tipos'])
+    listaTipos = bd.getTiposSitio()
     #sitios de interes
     sitios = list()
     for punto in listaPuntos:
+        punto = tuple(punto)
         for tipo in listaTipos:
             lista = bd.getSitios(tipo,punto,distancia)
             for sitio in lista:
                 if len([x for x in sitios if x[0]==sitio[0]]) ==0:
                     sitios.append(sitio)
     rutas = bd.getRutasRadio(listaPuntos[0],listaPuntos[-1],distancia)
-    #TODO mostrar los sitios
-    return render_template("map2.html", puntos=sitios, tipos=listaTipos)
+    #TODO mostrar RUTAS semejantes
+    return render_template("map2.html", puntos=sitios, tipos=listaTipos, rutas=rutas)
 
 @app.route("/calculaRutaSevici", methods=['POST'])
 def calculaRutaSevici():

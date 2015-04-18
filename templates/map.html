@@ -25,7 +25,7 @@
         google.maps.event.addDomListener(window, 'load', init_map);
     
         function toCoords(location) {
-            return [ location.D, location.k ];
+            return [ location.k, location.D ];
         }
 
         function placeMarker(location) {
