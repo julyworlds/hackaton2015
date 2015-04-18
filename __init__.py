@@ -113,8 +113,9 @@ def showMap():
 
 @app.route("/iniciarRuta",methods=['POST'])
 def iniciarRuta():
-    listaPuntos = request.form['puntos']
-    listaTipos = request.form['tipos']
+    listaPuntos = json.loads(request.form['puntos'])
+    print("asdasdasdas",listaPuntos)
+    listaTipos = json.loads(request.form['tipos'])
     #sitios de interes
     sitios = list()
     for punto in listaPuntos:
@@ -125,7 +126,7 @@ def iniciarRuta():
                     sitios.append(sitio)
     rutas = bd.getRutasRadio(listaPuntos[0],listaPuntos[-1],distancia)
     #TODO mostrar los sitios
-    return render_template("map2.html", puntos=sitios, tipos=listaTipos})
+    return render_template("map2.html", puntos=sitios, tipos=listaTipos)
 
 @app.route("/calculaRutaSevici", methods=['POST'])
 def calculaRutaSevici():
