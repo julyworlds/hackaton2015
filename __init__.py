@@ -136,16 +136,17 @@ def iniciarRuta():
 
 @app.route("/calculaRutaSevici", methods=['POST'])
 def calculaRutaSevici():
-    print("Entro en la ruta", request.form)
-    puntoInicio = json.loads(request.form['puntoInicio'])
-    puntoFin = json.loads(request.form['puntoFin'])
-    (dist1,sevici1) = bd.getSevici(tuple(puntoInicio[0]),distancia)
-    print(dist1,sevici1)
-    (dist2,sevici2) = bd.getSevici(tuple(puntoFin[0]),distancia)
+    puntoInicioJSON = json.loads(request.form['puntoInicio'])
+    puntoFinJSON = json.loads(request.form['puntoFin'])
+    puntoInicio = tuple(puntoInicioJSON[0])
+    puntoFin = tuple(puntoFinJSON[0])
+    (dist1,sevici1) = bd.getSevici(puntoInicio,distancia)
+    (dist2,sevici2) = bd.getSevici(puntoFin,distancia)
     if sevici1 != sevici2 and sevici1 != None and sevici2 != None:
+        print(sevici1,sevici2)
         distP = utilidades.getDistancia(puntoInicio,puntoFin)
-        if distP > dist1 + utilidades.getDistancia((sevici1[2],sevici1[3]),(sevici2[2],sevici2[3])) + dist2:
-            return jsonify(puntoInicio=sevici1,puntoFin=sevici2)
+        if distP*1.2 > dist1 + utilidades.getDistancia((sevici1[3],sevici1[4]),(sevici2[3],sevici2[4])) + dist2:
+            return jsonify(puntoInicio=((sevici1[3],sevici1[4]),sevici1[1],sevici1[0]),puntoFin=((sevici2[3],sevici2[4]),sevici2[1],sevici1[0]))
     return jsonify(puntoInicio=None,puntoFin=None)
 
 @app.route("/crearRuta", methods=['POST'])
