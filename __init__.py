@@ -162,8 +162,13 @@ def crearRuta():
 
 @app.route("/detallesRuta", methods=['GET'])    
 def detallesRuta():
-    idRuta = request.form['idRuta']
+    idRuta = request.form['ruta']
+    idValoracion = None
+    if 'valoracion' in request.form:
+        idValoracion = request.form['valoracion']
     detallesRuta = bd.getRutaById(idruta)
+    if idValoracion != None:
+        detallesRuta = [x for x in detallesRuta if x[3][3] == idValoracion]
 
 
 
