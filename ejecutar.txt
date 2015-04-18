@@ -1,0 +1,1 @@
+    Para ejecutar es necesario tener instalado Python3.4 junto con los paquetes que aparecen en requisitos.txt (se pueden instalar con pip)
