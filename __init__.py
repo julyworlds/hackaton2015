@@ -139,10 +139,9 @@ def calculaRutaSevici():
     print("Entro en la ruta", request.form)
     puntoInicio = json.loads(request.form['puntoInicio'])
     puntoFin = json.loads(request.form['puntoFin'])
-    print(puntoInicio, puntoFin)
-    (dist1,sevici1) = bd.getSevici(puntoInicio[0],distancia)
+    (dist1,sevici1) = bd.getSevici(tuple(puntoInicio[0]),distancia)
     print(dist1,sevici1)
-    (dist2,sevici2) = bd.getSevici(puntoFin[0],distancia)
+    (dist2,sevici2) = bd.getSevici(tuple(puntoFin[0]),distancia)
     if sevici1 != sevici2 and sevici1 != None and sevici2 != None:
         distP = utilidades.getDistancia(puntoInicio,puntoFin)
         if distP > dist1 + utilidades.getDistancia((sevici1[2],sevici1[3]),(sevici2[2],sevici2[3])) + dist2:
