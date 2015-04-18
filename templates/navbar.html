@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> Rutabici </title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <!-- Bootstrap core CSS -->
+        <link href="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.1/css/bootstrap.css" rel="stylesheet" media="screen" />
+
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="http://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.js"></script>
+            <script src="http://cdnjs.cloudflare.com/ajax/libs/respond.js/1.3.0/respond.js"></script>
+            <![endif]-->
+
+            <style>
+                #map-container { height: 500px }
+            </style>
+            <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+            <!-- Include all compiled plugins (below), or include individual files as needed -->
+            <script src="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.1/js/bootstrap.min.js"></script>
+        {% block gmaps %}
+        {% endblock %}
+
+    </head>
+<body>
+
+    <nav class="navbar navbar-default">
+      <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Icono</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="#">Inicio <span class="sr-only">(current)</span></a></li>
+            <li><a href="createroute">Crea ruta</a></li>
+            <li><a href="editroute">Edita ruta</a></li>
+            <li><a href="showroute">Muestra ruta</a></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            {% if not g.user.is_authenticated() %}
+            <li><a href="login">Login</a></li>
+            {% endif %}
+            {% if g.user.is_authenticated() %}
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{ g.user.username }} <span class="caret"></span></a>
+              <ul class="dropdown-menu" role="menu">
+                <li><a href="#">Preferencias</a></li>
+                <li><a href="#">Mis rutas</a></li>
+                <li class="divider"></li>
+                <li><a href="logout">Logout</a></li>
+              </ul>
+            </li>
+            {% endif %}
+          </ul>
+        </div><!-- /.navbar-collapse -->
+      </div><!-- /.container-fluid -->
+    </nav>
+
+    {% block content %}
+    <div class="container"> </div>
+    {% endblock %}
+
+</body>
+</html>
