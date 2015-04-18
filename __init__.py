@@ -116,8 +116,9 @@ def showMap():
 @app.route("/iniciarRuta",methods=['POST'])
 def iniciarRuta():
     listaPuntos = json.loads(request.form['puntos'])
-    #listaTipos = json.loads(request.form['tipos'])
-    listaTipos = bd.getTiposSitio()
+    listaTipos = json.loads(request.form['tipos'])
+    #listaTipos = bd.getTiposSitio()
+    print(listaTipos)
     #sitios de interes
     sitios = list()
     for pointer in range(1,len(listaPuntos)):
