@@ -60,8 +60,16 @@
 
               <div class="panel-heading"> Introduce tus preferencias </div>
               <div class="panel-body"> 
-
-                  <p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus in dapibus nibh. Praesent fermentum justo nec mauris fringilla laoreet. Sed pulvinar tellus in lacus bibendum, id molestie leo ultricies. Donec ultricies elit at tempor gravida. Ut sit amet neque at turpis aliquet laoreet quis a tellus. Mauris tristique tortor vel posuere volutpat. Ut condimentum, risus vel mollis tincidunt, dolor justo congue justo, vel egestas urna leo vel leo. Pellentesque a ligula eu augue scelerisque tincidunt. Praesent sit amet lacus finibus, imperdiet ipsum sed, malesuada turpis. Sed gravida scelerisque mi, at lobortis metus lobortis id. Integer posuere ex non velit blandit vehicula. Sed eu lobortis quam. Sed feugiat velit vitae diam molestie convallis. Morbi fermentum quam erat, tristique mollis mauris aliquet nec. Quisque consequat rhoncus dolor et venenatis </p>
+                <ul class="list-group" id="listaT">
+                    {% for tipo in tipos %}
+                    <li class="list-group-item"> 
+                        <span class="input-group-addon" id="element">
+                            <input class="navbar-left" type="checkbox" checked="true">
+                            <label id="nameT">{{tipo}}</label>
+                        </span>
+                    </li>
+                    {% endfor %} 
+                </ul>
                 <!--Formulario de preferencias de ruta-->
 
               </div>
@@ -72,16 +80,29 @@
             <div class="panel-heading"> Mapa </div>
             <div class="panel-body"> 
                 <div id="map-container" ></div>
-                <form action="/iniciarRuta" method="post">
+                <form id="target" action="/iniciarRuta" method="post">
                     <input type="hidden" id="puntos" name="puntos" value="" />
                     <input type="hidden" id="tipos" name="tipos" value="" />
-                    <input type="submit" id="btn" name="crear" value="Crear" / >
+                    <input type="button" id="btn" name="crear" value="Crear" / >
                 </form>  
 
                     <script>
                         $(document).ready(function(){
                             $('#btn').click(function(){
                                 $('#puntos').val(JSON.stringify(puntos));
+                                var tipos = [];
+                                for (var x=0;x< $('#listaT #element').length; x++ ){
+                                    element = $('#listaT #element')[x];
+                                    if(element.children[0].checked){
+                                        tipos.push(element.children[1].innerHTML);
+                                    }
+                                }
+                                $('#tipos').val(JSON.stringify(tipos));
+                                if(puntos.length > 1) {
+                                    $('#target').submit();
+                                } else {
+                                    alert('Tienes que seleccionar al menos dos puntos');
+                                }
                             });
                         });
                     </script>

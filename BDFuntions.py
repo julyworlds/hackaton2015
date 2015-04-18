@@ -55,7 +55,7 @@ def getSitioById(Id):
     cur.execute(sql,(Id))
     res = cur.fetchone()
     cur.close();conexion.close()
-    return res	
+    return res
 
 #Sevici
 def getSevici(punto=None, distancia=None):

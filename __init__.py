@@ -4,6 +4,7 @@ from flask.ext.sqlalchemy import SQLAlchemy
 from uuid import uuid4
 import BDFuntions as bd
 import json
+import utilidades
 
 # Inicia la aplicacion
 #500m
@@ -115,27 +116,32 @@ def showMap():
 @app.route("/iniciarRuta",methods=['POST'])
 def iniciarRuta():
     listaPuntos = json.loads(request.form['puntos'])
-    #listaTipos = json.dumps(request.form['tipos'])
-    listaTipos = bd.getTiposSitio()
+    listaTipos = json.loads(request.form['tipos'])
+    #listaTipos = bd.getTiposSitio()
+    print(listaTipos)
     #sitios de interes
     sitios = list()
-    for punto in listaPuntos:
-        punto = tuple(punto)
-        for tipo in listaTipos:
-            lista = bd.getSitios(tipo,punto,distancia)
-            for sitio in lista:
-                if len([x for x in sitios if x[0]==sitio[0]]) ==0:
-                    sitios.append(sitio)
-    rutas = bd.getRutasRadio(listaPuntos[0],listaPuntos[-1],distancia)
+    for pointer in range(1,len(listaPuntos)):
+        punto2 = tuple(listaPuntos[pointer])
+        punto1 = tuple(listaPuntos[pointer-1])
+        for punto in utilidades.listaPuntos(punto1, punto2, distancia):
+            for tipo in listaTipos:
+                lista = bd.getSitios(tipo,punto,distancia)
+                for sitio in lista:
+                    if len([x for x in sitios if x[0]==sitio[0]]) ==0:
+                        sitios.append(sitio)
+    rutas = bd.getRutasRadio(listaPuntos[0],listaPuntos[-1],distancia*2)
     #TODO mostrar RUTAS semejantes
-    return render_template("map2.html", puntos=sitios, tipos=listaTipos, rutas=rutas)
+    return render_template("map2.html", puntosInicio=listaPuntos ,puntos=sitios, tipos=listaTipos, rutas=rutas)
 
 @app.route("/calculaRutaSevici", methods=['POST'])
 def calculaRutaSevici():
-    puntoInicio = request.form['puntoInicio']
-    puntoFin = request.form['puntoFin']
-    (dist1,sevici1) = bd.getSevici(puntoInicio,distancia)
-    (dist2,sevici2) = bd.getSevici(puntoInicio,distancia)
+    print("Entro en la ruta", request.form)
+    puntoInicio = json.loads(request.form['puntoInicio'])
+    puntoFin = json.loads(request.form['puntoFin'])
+    (dist1,sevici1) = bd.getSevici(tuple(puntoInicio[0]),distancia)
+    print(dist1,sevici1)
+    (dist2,sevici2) = bd.getSevici(tuple(puntoFin[0]),distancia)
     if sevici1 != sevici2 and sevici1 != None and sevici2 != None:
         distP = utilidades.getDistancia(puntoInicio,puntoFin)
         if distP > dist1 + utilidades.getDistancia((sevici1[2],sevici1[3]),(sevici2[2],sevici2[3])) + dist2:
