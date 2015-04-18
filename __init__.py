@@ -4,6 +4,7 @@ from flask.ext.sqlalchemy import SQLAlchemy
 from uuid import uuid4
 import BDFuntions as bd
 import json
+import utilidades
 
 # Inicia la aplicacion
 #500m
@@ -115,20 +116,23 @@ def showMap():
 @app.route("/iniciarRuta",methods=['POST'])
 def iniciarRuta():
     listaPuntos = json.loads(request.form['puntos'])
-    #listaTipos = json.dumps(request.form['tipos'])
+    #listaTipos = json.loads(request.form['tipos'])
     listaTipos = bd.getTiposSitio()
     #sitios de interes
     sitios = list()
-    for punto in listaPuntos:
-        punto = tuple(punto)
-        for tipo in listaTipos:
-            lista = bd.getSitios(tipo,punto,distancia)
-            for sitio in lista:
-                if len([x for x in sitios if x[0]==sitio[0]]) ==0:
-                    sitios.append(sitio)
+    for pointer in range(1,len(listaPuntos)):
+        punto2 = tuple(listaPuntos[pointer])
+        punto1 = tuple(listaPuntos[pointer-1])
+        for punto in utilidades.listaPuntos(punto1, punto2, distancia):
+            for tipo in listaTipos:
+                lista = bd.getSitios(tipo,punto,distancia)
+                for sitio in lista:
+                    if len([x for x in sitios if x[0]==sitio[0]]) ==0:
+                        sitios.append(sitio)
     rutas = bd.getRutasRadio(listaPuntos[0],listaPuntos[-1],distancia)
+    print(sitios)
     #TODO mostrar RUTAS semejantes
-    return render_template("map2.html", puntos=sitios, tipos=listaTipos, rutas=rutas)
+    return render_template("map2.html", puntosInicio=listaPuntos ,puntos=sitios, tipos=listaTipos, rutas=rutas)
 
 @app.route("/calculaRutaSevici", methods=['POST'])
 def calculaRutaSevici():
