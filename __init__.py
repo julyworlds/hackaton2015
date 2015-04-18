@@ -129,8 +129,7 @@ def iniciarRuta():
                 for sitio in lista:
                     if len([x for x in sitios if x[0]==sitio[0]]) ==0:
                         sitios.append(sitio)
-    rutas = bd.getRutasRadio(listaPuntos[0],listaPuntos[-1],distancia)
-    print(sitios)
+    rutas = bd.getRutasRadio(listaPuntos[0],listaPuntos[-1],distancia*2)
     #TODO mostrar RUTAS semejantes
     return render_template("map2.html", puntosInicio=listaPuntos ,puntos=sitios, tipos=listaTipos, rutas=rutas)
 
