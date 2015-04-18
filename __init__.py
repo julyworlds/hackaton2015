@@ -136,9 +136,12 @@ def iniciarRuta():
 
 @app.route("/calculaRutaSevici", methods=['POST'])
 def calculaRutaSevici():
+    print("Entro en la ruta", request.form)
     puntoInicio = json.loads(request.form['puntoInicio'])
     puntoFin = json.loads(request.form['puntoFin'])
+    print(puntoInicio, puntoFin)
     (dist1,sevici1) = bd.getSevici(puntoInicio[0],distancia)
+    print(dist1,sevici1)
     (dist2,sevici2) = bd.getSevici(puntoFin[0],distancia)
     if sevici1 != sevici2 and sevici1 != None and sevici2 != None:
         distP = utilidades.getDistancia(puntoInicio,puntoFin)

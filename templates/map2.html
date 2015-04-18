@@ -16,7 +16,7 @@
         puntosInicio.push([ {{ punto[0] }}, {{ punto[1] }}])
         {% endfor %} 
 
-        var punto_actual = puntosInicio[0];
+        var punto_actual = [puntosInicio[0], '', 0];
         var formData = [];
         var rutaFinal = [];
 
@@ -56,8 +56,8 @@
                 });
                 google.maps.event.addListener(marker, 'click', function() {
                     // Se prepara el array con ambos puntos
-                    formData = { puntoInicio : punto_actual,
-                                 puntoFin : [toCoords(marker.position), marker.tipo, marker.id]};
+                    formData = { puntoInicio : JSON.stringify(punto_actual),
+                                 puntoFin : JSON.stringify([toCoords(marker.position), marker.tipo, marker.id])};
 
                     punto_actual = [toCoords(marker.position), marker.type, marker.id];
                     console.log(formData);
